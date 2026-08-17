@@ -1,0 +1,331 @@
+<div class="margin_body">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <p id="rrhhFeedback" class="hide msgFeedback"></p>
+  </div>
+  <a class="mb-2" (click)="tornar()"><-- Tornar a cercador</a>
+  <h1>Històric Serveis Prestats</h1>
+  <div class="margin-left">
+    <div fxLayout="row wrap" fxLayoutAlign="start center">
+      <mat-card class="mat-elevation-z24">
+        <div fxLayout="row wrap" fxLayoutAlign="start center">
+          <div>
+          Codi: {{ personal.id.codiempl }}
+        </div>
+        <div>
+            <mat-form-field appearance="fill" fxFlex="150px">
+              <mat-label>Data límit</mat-label>
+              <input matInput type="date" [formControl]="dlimit" />
+            </mat-form-field>          
+        </div>
+        <div>
+          <button
+          class="boto-afegir"
+          mat-button
+          color="primary"      
+          (click)="imprimir()"
+          
+        >
+        <mat-icon>printer</mat-icon>
+                  Serv. Prestats
+        </button>
+        </div>
+        <div>
+          <button
+          class="boto-afegir"
+          mat-button
+          color="primary"
+          (click)="imprimir_qualif()"
+        >
+        <mat-icon>printer</mat-icon>
+          Qualif. Professional
+        </button>
+        </div>
+        </div>
+        <div fxLayout="row">
+          Document: {{ personal.ndniempl }}{{ personal.ddniempl }} 
+        </div>
+        <div fxLayout="row">
+          Nom: {{ personal.nombre }} {{ personal.apellid1 }}
+          {{ personal.apellid2 }}
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div fxLayout="column">
+    <div class="mt-2" fxLayout="row" fxLayoutAlign="start start">
+      <h2>Places ocupades</h2>
+      <button
+        class="boto-afegir"
+        mat-button
+        color="primary"
+        (click)="afegirPlaza()"
+      >
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+    <div fxLayout="row">
+      <mat-progress-bar
+        fxFlex="200px"
+        *ngIf="isSearchingPlaces"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+  </div>
+  <table mat-table [dataSource]="llistaPlaces">
+    <ng-container matColumnDef="plaza">
+      <th mat-header-cell *matHeaderCellDef>PLAÇA</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.descripcionPza }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="grup">
+      <th mat-header-cell *matHeaderCellDef>GRUP</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.grupoCod }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="categoria">
+      <th mat-header-cell *matHeaderCellDef>CATEGORIA</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.escalaDes }} - {{ plaza.subescalaDes }} -
+        {{ plaza.claseDes }} - {{ plaza.categoriaDes }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="situacio">
+      <th mat-header-cell *matHeaderCellDef>SITUACIÓ</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.situacionPzaDes }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="adscripcio">
+      <th mat-header-cell *matHeaderCellDef>ADSCRIPCIÓ</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.adscripcionPzaDes }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="relacio">
+      <th mat-header-cell *matHeaderCellDef>RELACIÓ</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.naturalezaRelacionDes }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="situadm">
+      <th mat-header-cell *matHeaderCellDef>S.ADM</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.situacionAdminDes }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="desde">
+      <th mat-header-cell *matHeaderCellDef>DES DE</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.inicioVersionFase }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="fins">
+      <th mat-header-cell *matHeaderCellDef>FINS</th>
+      <td mat-cell *matCellDef="let plaza">
+        {{ plaza.finVersionFase }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="update">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td class="action_cell" mat-cell *matCellDef="let plaza">
+        <button mat-button (click)="updatePlaza(plaza)">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td class="action_cell" mat-cell *matCellDef="let plaza">
+        <button mat-button color="warn" (click)="deletePlaza(plaza)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="plazaDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: plazaDisplayedColumns"></tr>
+  </table>
+  <div fxLayout="column">
+    <div class="mt-2" fxLayout="row" fxLayoutAlign="start start">
+      <h2>Llocs ocupats</h2>
+      <button
+        class="boto-afegir"
+        mat-button
+        color="primary"
+        (click)="afegirLloc()"
+      >
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+    <div fxLayout="row">
+      <mat-progress-bar
+        fxFlex="200px"
+        *ngIf="isSearchingLlocs"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+  </div>
+  <table mat-table [dataSource]="llistaLlocs">
+    <ng-container matColumnDef="entitat">
+      <th mat-header-cell *matHeaderCellDef>ORGANIGRAMA</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.organizacionNivel1Des }} - {{ lloc.organizacionNivel2Des }} -
+        {{ lloc.organizacionNivel3Des }} - {{ lloc.organizacionNivel4Des }} -
+        {{ lloc.organizacionNivel5Des }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="lloc">
+      <th mat-header-cell *matHeaderCellDef>LLOC</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.puestoDes }} 
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="titular">
+      <th mat-header-cell *matHeaderCellDef>TIT</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.titular }} {{ lloc.expedienteCeseFecha }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="grup">
+      <th mat-header-cell *matHeaderCellDef>GRUP</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.grupoRptocupacionCod }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="situacio">
+      <th mat-header-cell *matHeaderCellDef>SITUACIÓ</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.situacionDes }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="adscripcio">
+      <th mat-header-cell *matHeaderCellDef>ADSCRIPCIÓ</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.adscripcionDes }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="efecte">
+      <th mat-header-cell *matHeaderCellDef>EFECTES</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.inicioPosesionPto }} - {{ lloc.finPosesionPto }}
+      </td>
+    </ng-container>    
+    <ng-container matColumnDef="vigencia">
+      <th mat-header-cell *matHeaderCellDef>VIGÈNCIA</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.inicioVersionFas }} - {{ lloc.finVersionFas }}
+      </td>
+    </ng-container>      <ng-container matColumnDef="jornada">
+      <th mat-header-cell *matHeaderCellDef>JORNADA</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ getJornada(lloc) }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="desde">
+      <th mat-header-cell *matHeaderCellDef>DES DE</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.inicioVersionFas }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="fins">
+      <th mat-header-cell *matHeaderCellDef>FINS</th>
+      <td mat-cell *matCellDef="let lloc">
+        {{ lloc.finVersionFas }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="update">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td class="action_cell" mat-cell *matCellDef="let lloc">
+        <button
+        *ngIf="lloc.activoHoy !== 'S'"
+          mat-button
+          (click)="updateLloc(lloc)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td class="action_cell" mat-cell *matCellDef="let lloc">
+        <button
+          *ngIf="lloc.activoHoy !== 'S'"
+          mat-button
+          color="warn"
+          (click)="deleteLloc(lloc)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="llocsDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: llocsDisplayedColumns"></tr>
+  </table>
+  <div fxLayout="column">
+    <div class="mt-2" fxLayout="row" fxLayoutAlign="start start">
+      <h2>Serveis Prestats</h2>
+    </div>
+    <div fxLayout="row">
+      <mat-progress-bar
+        fxFlex="200px"
+        *ngIf="isSearchingSrvPrest"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+  </div>
+  <table mat-table [dataSource]="llistaSrvprest">
+    <ng-container matColumnDef="admin">
+      <th mat-header-cell *matHeaderCellDef>ADMINISTRACIÓ</th>
+      <td mat-cell *matCellDef="let sp">
+        {{ sp.cueradmi }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="plaza">
+      <th mat-header-cell *matHeaderCellDef>PLAÇA</th>
+      <td mat-cell *matCellDef="let sp">
+        {{ sp.descplaz }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="rela">
+      <th mat-header-cell *matHeaderCellDef>RELACIÓ</th>
+      <td mat-cell *matCellDef="let sp">
+        {{ sp.ynaturela.descrela }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="situAdm">
+      <th mat-header-cell *matHeaderCellDef>S. ADM</th>
+      <td mat-cell *matCellDef="let sp">
+        {{ sp.sitadm.descsiad }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="dedicacio">
+      <th mat-header-cell *matHeaderCellDef>DEDICACIÓ</th>
+      <td mat-cell *matCellDef="let sp">
+        {{ sp.porcdedi }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="desde">
+      <th mat-header-cell *matHeaderCellDef>DES DE</th>
+      <td mat-cell *matCellDef="let sp">
+        {{ sp.finianti }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="fins">
+      <th mat-header-cell *matHeaderCellDef>FINS</th>
+      <td mat-cell *matCellDef="let sp">
+        {{ sp.ffinanti }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td class="action_cell" mat-cell *matCellDef="let sp">
+        <button mat-button color="warn" (click)="deleteSrvprestat(sp)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="spDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: spDisplayedColumns"></tr>
+  </table>
+</div>

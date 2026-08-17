@@ -1,0 +1,89 @@
+<div style="margin-left: auto; margin-right: auto">
+  <p id="userFeedback"></p>
+</div>
+<div fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="mat-elevation-z24">
+    <div fxFlex="500px" fxFlex.lt-sm="300px">
+      <h2>{{ titulo }}</h2>
+      <form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="saveUser()">
+        <div fxLayout="column">
+          <mat-form-field *ngIf="!updateMode" appearance="outline">
+            <mat-label>Usuario</mat-label>
+            <input matInput type="text" [formControl]="entrada" />
+            <mat-error *ngIf="entrada.hasError('required')"
+              >El identificador de usuario es obligatorio</mat-error
+            >
+            <mat-error *ngIf="entrada.hasError('maxlength')">
+              Tamaño máximo de identificador de usuario 10 caracteres
+            </mat-error>
+            <mat-error *ngIf="entrada.hasError('minlength')">
+              Tamaño mínimo de identificador de usuario 3 caracteres
+            </mat-error>
+          </mat-form-field>
+          <h3 *ngIf="updateMode">Usuario: {{ usuari.entrada }}</h3>
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre completo</mat-label>
+            <input matInput type="text" [formControl]="nomcomplet" />
+            <mat-error *ngIf="nomcomplet.hasError('required')"
+              >El nombre de usaurio es obligatorio</mat-error
+            >
+            <mat-error *ngIf="nomcomplet.hasError('maxlength')">
+              El tamaño máximo del nombre de usuario es 50 caracteres
+            </mat-error>
+          </mat-form-field>
+          <div *ngIf="updateMode">
+            La contraseña se dejará en blanco si no se desea cambiar
+          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [formControl]="password" />
+            <mat-error *ngIf="password.hasError('required')">
+              La contraseña de usuario es obligatoria
+            </mat-error>
+            <mat-error *ngIf="password.hasError('minlength')">
+              La contraseña de usuario debe tener al menos 8 caracteres
+            </mat-error>
+            <mat-error *ngIf="password.hasError('maxlength')">
+              La contraseña de usuario debe tener máximo 16 caracteres
+            </mat-error>
+            <mat-error *ngIf="password.hasError('pattern')">
+              La contraseña debe tener al menos una mayúscula, una minúsucula,
+              un número y un caràcter especial
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="mt-plus">
+            <mat-label>Confirmar Password</mat-label>
+            <input matInput type="password" [formControl]="repeatpassword" />
+            <div
+              class="mat-error mat-form-field-subscript-wrapper mt-2"
+              *ngIf="userForm.errors?.['passwordRepeated']"
+            >
+              Las contraseñas no coinciden
+            </div>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Rol</mat-label>
+            <mat-select [(value)]="selectedRole">
+              <mat-option
+                *ngFor="let role of roleList"
+                [value]="role.krole.toString()"
+              >
+                {{ role.nom }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div fxLayout="row">
+            <button fxFlex mat-raised-button color="primary" type="submit">
+              SAVE
+            </button>
+            <button fxFlex mat-raised-button color="accent" (click)="exit()">
+              EXIT
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

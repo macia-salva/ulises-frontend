@@ -1,0 +1,82 @@
+<div class="container no-print">
+  <!-- NO AUTH REQUIRED -->
+  <mat-toolbar color="primary">
+    <mat-toolbar-row *ngIf="showNoAuthSection">
+      <div fxShow fxHide.lt-sm>
+        <button mat-button (click)="login()">Login</button>
+      </div>
+      <div fxHide fxShow.lt-sm>
+        <button mat-button [matMenuTriggerFor]="menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="login()">Login</button>
+        </mat-menu>
+      </div>
+      <span fxFlex="auto"></span>
+      <img
+        src="assets/img/Policia_Local_Derecha_reducido.jpg"
+        alt="Logo Policia Local"
+      />
+    </mat-toolbar-row>
+
+    <!-- AUTH REQUIRED -->
+    <mat-toolbar-row *ngIf="showAuthSection">
+      <div fxShow fxHide.lt-sm> 
+        <button *ngIf="showUsuariOption" mat-button (click)="usuaris()">
+          Usuarios
+        </button>
+        <button *ngIf="showOrdenancesOption" mat-button (click)="ordenances()">
+          Ordenanzas
+        </button>
+        <button *ngIf="showSancioOption" mat-button (click)="sancions()">
+          Sanciones
+        </button>
+        <button *ngIf="showInfoOption" mat-button (click)="infoSancions()">
+          Consultas
+        </button>
+        <button mat-button (click)="logout()">Logout</button>
+      </div>
+      <div fxHide fxShow.lt-sm>
+        <button mat-button [matMenuTriggerFor]="menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button *ngIf="showUsuariOption" mat-menu-item (click)="usuaris()">
+            Usuarios
+          </button>
+          <button
+            *ngIf="showOrdenancesOption"
+            mat-menu-item
+            (click)="ordenances()"
+          >
+            Ordenanzas
+          </button>
+          <button *ngIf="showSancioOption" mat-menu-item (click)="sancions()">
+            Sanciones
+          </button>
+          <button *ngIf="showInfoOption" mat-menu-item (click)="infoSancions()">
+            Consultas
+          </button>
+          <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
+      </div>
+      <span fxFlex="auto"></span>
+      {{ username }}
+      <button
+        mat-icon-button
+        aria-label="Cambiar Contraseña"
+        (click)="changePassword()"
+      >
+        <mat-icon>vpn_key</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Cambiar Contraseña" (click)="help()">
+        <mat-icon>help_outline</mat-icon>
+      </button>
+      <img
+        src="assets/img/Policia_Local_Derecha_reducido.jpg"
+        alt="Logo Policia Local"
+      />
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>

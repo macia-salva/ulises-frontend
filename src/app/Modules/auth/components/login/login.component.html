@@ -1,0 +1,52 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <p id="loginFeedback" class="hide msgFeedback"></p>
+</div>
+<div fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="mat-elevation-z24">
+    <div class="login-card">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div fxLayout="column">
+          <mat-form-field appearance="fill">
+            <mat-label>Usuari</mat-label>
+            <input matInput autocomplete="off" type="text" [formControl]="username" />
+            <mat-error *ngIf="username.errors">
+              <span
+                *ngIf="username.errors && (username.touched || username.dirty)"
+              >
+                <span *ngIf="username.errors.required"
+                  >Heu d'introducir l'usuari</span
+                >
+              </span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [formControl]="password" />
+            <mat-error *ngIf="password.errors">
+              <span
+                *ngIf="password.errors && (password.touched || password.dirty)"
+              >
+                <span *ngIf="password.errors.required"
+                  >Heu d'introducir el password</span
+                >
+                <span *ngIf="password.errors.minlength"
+                  >La contrasenya ha de tenir un mínim de 8 caràcters</span
+                >
+              </span>
+            </mat-error>
+          </mat-form-field>
+
+          <button 
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!loginForm.valid"
+          >
+            Login
+          </button>
+          <mat-progress-bar class="mt-1" *ngIf="isValidating" mode="indeterminate"></mat-progress-bar>    
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

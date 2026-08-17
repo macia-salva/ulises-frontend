@@ -1,0 +1,34 @@
+th.mat-header-cell,
+td.mat-cell {
+  padding-right: 2rem;
+}
+.action_cell {
+  min-width: 128px;
+}
+.info-data {
+  padding-top: 1em;
+}
+
+.circle-with-text {
+  margin-left: 0.3em;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  text-align: center;
+  display: flex;
+}
+
+.rojo {
+  background-color: red;
+}
+
+.gris {
+  background-color: gray;
+}
+
+.boto-afegir {
+  margin-left: 1em;
+}

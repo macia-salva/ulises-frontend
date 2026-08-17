@@ -1,0 +1,63 @@
+<h2>Gestión Usuarios</h2>
+<div>
+  <p id="userFeedback" class="hide msgFeedback"></p>
+</div>
+<div class="ml-2">
+  <div fxLayout="row wrap" fxLayoutAlign="start baseline">
+    <form [formGroup]="filterForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Filtro por nombre</mat-label>
+        <input matInput type="text" [formControl]="nomcomplet" />
+        <mat-error *ngIf="nomcomplet.hasError('minlength')">
+          Mínimo 3 caracteres para poder filtrar
+        </mat-error>
+        <button *ngIf="canSelect" mat-icon-button matSuffix (click)="filter()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+    <div>
+      <button
+        *ngIf="canInsert"
+        class="boto-afegir"
+        mat-raised-button
+        color="primary"
+        (click)="afegirUsuari()"
+      >
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="searchResult" *ngIf="hasData()">
+    <div>
+      <table mat-table [dataSource]="usuaris">
+        <ng-container matColumnDef="entrada">
+          <th mat-header-cell *matHeaderCellDef>USUARIO</th>
+          <td mat-cell *matCellDef="let usuari">
+            {{ usuari.entrada }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="nomcomplet">
+          <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+          <td mat-cell *matCellDef="let usuari">{{ usuari.nomcomplet }}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td class="action_cell" mat-cell *matCellDef="let usuari">
+            <button
+              *ngIf="canUpdate"
+              mat-mini-fab
+              color="accent"
+              (click)="updateUsuari(usuari.kusuari)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="usuariDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: usuariDisplayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+</div>

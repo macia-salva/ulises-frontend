@@ -1,0 +1,53 @@
+<div class="container no-print">
+  <!-- NO AUTH REQUIRED -->
+  <mat-toolbar color="primary">
+    <mat-toolbar-row *ngIf="showNoAuthSection">
+      <div fxShow fxHide.lt-sm>
+        <button mat-button (click)="login()">Login</button>
+      </div>
+      <div fxHide fxShow.lt-sm>
+        <button mat-button [matMenuTriggerFor]="menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="login()">Login</button>
+        </mat-menu>
+      </div>
+      <span fxFlex="auto"></span>
+    </mat-toolbar-row>
+
+    <!-- AUTH REQUIRED -->
+    <mat-toolbar-row *ngIf="showAuthSection">
+      <div fxShow fxHide.lt-sm> 
+        <button *ngIf="showRRHHSigpOption" mat-button (click)="personal()">
+          Gestió Personal
+        </button>
+        <button *ngIf="showRRHHCarreraOption" mat-button (click)="carrera()">
+          Carrera Professional
+        </button>
+        <button mat-button (click)="logout()">Logout</button>
+      </div>
+      <div fxHide fxShow.lt-sm>
+        <button mat-button [matMenuTriggerFor]="menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button *ngIf="showRRHHSigpOption" mat-menu-item (click)="personal()">
+            Gestió Personal
+          </button>
+          <button *ngIf="showRRHHCarreraOption" mat-menu-item (click)="carrera()">
+            Carrera Professional
+          </button>          
+          <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
+      </div>
+      <span fxFlex="auto"></span>
+      {{ username }}  
+      <span fxFlex="10px"></span>
+      {{getExpTime()}}
+      <button mat-icon-button aria-label="Actualizar Información" (click)="sync()">
+        <mat-icon>sync</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>

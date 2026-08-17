@@ -1,0 +1,98 @@
+<h2>Carrera Professional / Afegir Participant</h2>
+<div>
+    <p id="Feedback" class="hide msgFeedback"></p>
+</div>
+<div *ngIf="!updating" fxLayout="column wrap">
+    <div>
+        <a class="mb-2" (click)="tornar()"><-- Tornar a llistat participants</a>
+    </div>
+    <div fxLayout="row wrap">
+        <mat-card class="mat-elevation-z24" fxFlex.gt-md="600px">
+            <p>Convocatoria: {{ conv?.descripcio}}</p>
+            <p>Data Reconeixement: {{ conv?.dataReconeixement}}</p>
+        </mat-card>
+    </div>
+    <div fxFlex="20px"></div>
+    <form *ngIf="partForm" [formGroup]="partForm" (ngSubmit)="afegirParticipant()" autocomplete="off">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+            <div fxLayout="row wrap">
+                <mat-form-field appearance="fill" fxFlex="100px">
+                    <mat-label>Codi empleat:</mat-label>
+                    <input matInput type="number" (blur)="consultarPersonal()"   [formControl]="codiempl" />
+                    <mat-error *ngIf="codiempl.hasError('required')">
+                        Camp obligatori
+                    </mat-error>
+                </mat-form-field>
+                <mat-icon *ngIf="readingNom">update</mat-icon>
+                <mat-form-field  class="ml-2"  appearance="fill" fxFlex="400px">
+                    <mat-label>Nom empleat:</mat-label>
+                    <input   matInput type="text" [formControl]="nomempl" />
+                </mat-form-field>
+            </div>
+            <div fxLayout="row wrap">
+            <mat-form-field class="mt-2" appearance="fill" fxFlex="300px">
+                <mat-label>Data registre</mat-label>
+                <input placeholder="dd/mm/yyyy" matInput type="text" [formControl]="data" />
+                <mat-error *ngIf="data.hasError('required')">
+                    La data de registre es obligatoria
+                </mat-error>
+            </mat-form-field>
+            </div>
+            <div fxLayout="row wrap">
+                <mat-form-field class="mt-2" appearance="fill" fxFlex="300px">
+                    <mat-label>Tipus questionari avaluació</mat-label>
+                        <mat-select [formControl]="questionari">
+                            <mat-option value="2">Normal</mat-option>
+                            <mat-option value="1">Funcions directives</mat-option>
+                            <mat-option value="3">Avaluació amb vigència</mat-option>
+                </mat-select>
+                <mat-error *ngIf="questionari.hasError('required')">
+                    El tipus de questionar és obligatori
+                </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row wrap">
+                <mat-form-field class="mt-2" appearance="fill" fxFlex="300px">
+                    <mat-label>Grup</mat-label>
+                        <mat-select [formControl]="grup">
+                            <mat-option value="NO" selected>Càlcul Automàtic</mat-option>
+                            <mat-option value="AAPP">AAPP</mat-option>
+                            <mat-option value="C2">C2</mat-option>
+                            <mat-option value="C1">C1</mat-option>
+                            <mat-option value="B">B</mat-option>
+                            <mat-option value="A2">A2</mat-option>
+                            <mat-option value="A1">A1</mat-option>
+                </mat-select>
+                <mat-error *ngIf="grup.hasError('required')">
+                    La grup és obligatori
+                </mat-error>
+                </mat-form-field>
+                <mat-form-field class="mt-2 ml-2" appearance="fill" fxFlex="300px">
+                    <mat-label>Nivell</mat-label>
+                        <mat-select [formControl]="nivell">
+                            <mat-option value="0" selected>Càlcul Automàtic</mat-option>
+                            <mat-option value="1">1</mat-option>
+                            <mat-option value="2">2</mat-option>
+                            <mat-option value="3">3</mat-option>
+                            <mat-option value="4">4</mat-option>
+                </mat-select>
+                <mat-error *ngIf="nivell.hasError('required')">
+                    El nivell és obligatori
+                </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" class="mt-plus">
+                <button fxFlex="200px" mat-raised-button color="primary" type="submit">
+                    Afegir Participació
+                </button>
+            </div>
+
+        </mat-card>
+    </form>
+</div>
+<div *ngIf="updating" fxLayout="column wrap">
+    <div>Processant Alta empleat {{codiempl.value}} a convocatoria {{ conv?.descripcio}}</div>
+    <div fxLayout="row" class="mt-plus">
+        <mat-progress-bar fxFlex.gt-md="600px" *ngIf="updating" mode="indeterminate"></mat-progress-bar>
+    </div>    
+</div>

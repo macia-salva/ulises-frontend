@@ -1,0 +1,46 @@
+<h2>Carrera Professional / Afegir Participant</h2>
+<div>
+    <p id="Feedback" class="hide msgFeedback"></p>
+</div>
+<div  fxLayout="column wrap">
+    <div>
+        <a class="mb-2" (click)="tornar()"><-- Tornar a llistat convocatòries</a>
+    </div>
+    <form *ngIf="convForm" [formGroup]="convForm" (ngSubmit)="afegirConvocatoria()" autocomplete="off">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+            <div fxLayout="row wrap">
+                <mat-form-field  appearance="fill" fxFlex="400px">
+                    <mat-label>Descripcio:</mat-label>
+                    <input   matInput type="text" [formControl]="descripcio" />
+                    <mat-error *ngIf="datareco.hasError('required')">
+                        La descripció obligatoria
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row wrap">
+                <mat-form-field class="mt-2" appearance="fill" fxFlex="300px">
+                    <mat-label>Tipus convocatoria</mat-label>
+                        <mat-select [formControl]="tipus">
+                            <mat-option value="O">Ordinaria</mat-option>
+                            <mat-option value="H">Homologacio</mat-option>
+                            <mat-option value="R">Renquadrament</mat-option>
+                </mat-select>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row wrap">
+            <mat-form-field class="mt-2" appearance="fill" fxFlex="300px">
+                <mat-label>Data reconeixement</mat-label>
+                <input placeholder="dd/mm/yyyy" matInput type="text" [formControl]="datareco" />
+                <mat-error *ngIf="datareco.hasError('required')">
+                    La data de reconeixement es obligatoria
+                </mat-error>
+            </mat-form-field>
+            </div>
+            <div fxLayout="row" class="mt-plus">
+                <button fxFlex="200px" mat-raised-button color="primary" type="submit">
+                    Afegir Convocatoria
+                </button>
+            </div>
+
+        </mat-card>
+    </form></div>

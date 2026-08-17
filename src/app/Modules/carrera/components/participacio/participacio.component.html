@@ -1,0 +1,459 @@
+<h2>Carrera Professional / Gestió Participant</h2>
+<div>
+    <p id="Feedback" class="hide msgFeedback"></p>
+</div>
+<div *ngIf="!reading" fxLayout="column wrap">
+    <div>
+        <a class="mb-2" (click)="tornar()"><-- Tornar a llistat participants</a>
+    </div>
+    <div fxLayout="row wrap">
+        <mat-card class="mat-elevation-z24" fxFlex.gt-md="600px">
+            <p>Convocatoria: {{ convocatoria?.descripcio}}</p>
+            <p>Data Reconeixement: {{ convocatoria?.dataReconeixement}}</p>
+        </mat-card>
+        <div>
+          <button
+          class="boto-afegir"
+          mat-button
+          color="primary"      
+          (click)="imprimir()"
+          >
+        <mat-icon>printer</mat-icon>
+                  Informe
+        </button>
+        </div>
+    </div>
+    <div fxLayout="row wrap" fxFill>
+        <mat-card class="container mat-elevation-z24" fxFlex.gt-md="1000px">
+            <div>Participant</div>
+            <div>{{ participacio?.personal?.document}} {{ participacio?.personal?.nomcomplet}}</div>
+            <div>Data Registre:</div>
+            <div>{{ participacio?.dataRegistre}}</div>
+            <div *ngIf="participacio?.motiuexclusio!=''">Motiu Exclusió:</div>
+            <div *ngIf="participacio?.motiuexclusio!=''">{{ participacio?.motiuexclusio}}</div>
+            <div>Nivell reconegut:</div>
+            <div>{{ cpresultat[0].participacio.nivellreconegut?.grup}} {{ cpresultat[0].participacio.nivellreconegut?.nivell}}</div>
+            <div>Nivell sol.licitad:</div>
+            <div>{{ participacio?.nivellobtingut?.grup}} {{ participacio?.nivellobtingut?.nivell}}</div>
+            <div>Lloc actual:</div>
+            <div>{{ cpresultat[0].rptactual.puestoDes}} {{ cpresultat[0].rptactual.grupoFaseDesc}}</div>
+            <div>Requisits del lloc:</div>
+            <div>
+            <mat-list>
+                <mat-list-item *ngFor="let req of cpresultat[0].requisits">{{req}}</mat-list-item>
+            </mat-list>
+            </div>
+            <div>Estat:</div>
+            <div>{{cpresultat[0].participacio.estatstr}} - {{cpresultat[0].participacio.swadmesstr}}</div>
+        </mat-card>
+    </div>
+    <div class="ml-2 mt-2 mb-2" fxLayout="row" fxLayoutGap="32px">
+        <button mat-raised-button (click)="changeMode(1)" [color]="mode===1?'primary':'secondary'">
+            Serveis Prestats 
+            <mat-icon *ngIf="cpresultat[0].participacio.computtotaldies>=1825">done</mat-icon>
+            <mat-icon *ngIf="cpresultat[0].participacio.computtotaldies<1825">clear</mat-icon>
+        </button>
+        <button mat-raised-button (click)="changeMode(2)" [color]="mode===2?'primary':'secondary'">
+            Formació
+            <mat-icon *ngIf="cpresultat[0].puntsRequrits<=totalpunts">done</mat-icon>
+            <mat-icon *ngIf="cpresultat[0].puntsRequrits>totalpunts">clear</mat-icon>
+        </button>
+        <button mat-raised-button (click)="changeMode(3)" [color]="mode===3?'primary':'secondary'">Avaluació
+            rendiment</button>
+    </div>
+    <mat-divider></mat-divider>    
+    <div *ngIf="mode===1" fxLayot="column">
+        <div fxLayout="row wrap" fxFill>
+            <mat-card class="container mat-elevation-z24" fxFlex.gt-md="1000px">
+                <div>Màxim dies continuats treballats:</div>
+                <div>{{ cpresultat[0].participacio.diestrebaju}}</div>
+                <div>Dies treballats fins darrer reconeixement:</div>
+                <div>{{ cpresultat[0].participacio.diesant}}</div>
+                <div>Resta dies darrer reconeixement:</div>
+                <div>{{ cpresultat[0].participacio.diesant}} - {{ cpresultat[0].participacio.diesitant}} - ( {{ cpresultat[0].participacio.nivellreconegut==null?0:cpresultat[0].participacio.nivellreconegut.nivell }} * 1825) = {{ cpresultat[0].participacio.restaant}}</div>
+                <div>Dies treballats des de darrer reconeixement:</div>
+                <div>{{ cpresultat[0].participacio.totaldies}}</div>
+                <div>Dies it darrers 5 anys:</div>
+                <div>{{ cpresultat[0].participacio.diesit}}</div>
+                <div>Dies treballats fins reconeixement:</div>
+                <div>{{ cpresultat[0].participacio.computtotaldies}}</div>
+            </mat-card>
+        </div>
+        <table mat-table [dataSource]="cpresultat[0].ocupacio">
+            <ng-container matColumnDef="desde">
+                <th mat-header-cell *matHeaderCellDef>Des de</th>
+                <td [bgColor]="sp.abans==='S'?'#CCCCCC':'#FFFFFF'"  mat-cell *matCellDef="let sp">
+                    {{ sp.desde }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="fins">
+                <th mat-header-cell *matHeaderCellDef>Fins</th>
+                <td [bgColor]="sp.abans==='S'?'#CCCCCC':'#FFFFFF'" mat-cell *matCellDef="let sp">
+                    {{ sp.fins }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="lloc">
+                <th mat-header-cell *matHeaderCellDef>Lloc</th>
+                <td [bgColor]="sp.abans==='S'?'#CCCCCC':'#FFFFFF'" mat-cell *matCellDef="let sp">
+                    {{ sp.nomlloc }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="grup">
+                <th mat-header-cell *matHeaderCellDef>Grup</th>
+                <td [bgColor]="sp.abans==='S'?'#CCCCCC':'#FFFFFF'" mat-cell *matCellDef="let sp">
+                    {{ sp.grup }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="dies">
+                <th mat-header-cell *matHeaderCellDef>Dies</th>
+                <td [bgColor]="sp.abans==='S'?'#CCCCCC':'#FFFFFF'" mat-cell *matCellDef="let sp">
+                    {{ sp.dies }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="coef">
+                <th mat-header-cell *matHeaderCellDef>Coef</th>
+                <td [bgColor]="sp.abans==='S'?'#CCCCCC':'#FFFFFF'" mat-cell *matCellDef="let sp">
+                    {{ sp.coef}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="diesp">
+                <th mat-header-cell *matHeaderCellDef>Dies pond</th>
+                <td [bgColor]="sp.abans==='S'?'#CCCCCC':'#FFFFFF'" mat-cell *matCellDef="let sp">
+                    {{ sp.diesponderat}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="acum">
+                <th mat-header-cell *matHeaderCellDef>Acumulat</th>
+                <td [bgColor]="sp.abans==='S'?'#CCCCCC':'#FFFFFF'" mat-cell *matCellDef="let sp">
+                    {{ sp.acumulat}}
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </div>
+    <div *ngIf="mode===2" fxLayot="column">
+        <div fxLayout="row" fxLayoutAlign="start center">
+             <mat-card class="container mat-elevation-z24" fxFlex.gt-md="200px" fxLayout="column">
+                <div><strong>Disposicio 4: </strong>{{participacio?.swdispo4}}</div>
+                <div><strong>Punts Requerits: </strong>{{cpresultat[0].puntsRequrits}}</div>
+                <div><strong>Total punts: </strong>{{totalpunts}}</div>
+            </mat-card>
+            <div>
+                <button (click)="tancarValoracioFormacio()"  *ngIf="accio==='update' && participacio?.estat==='FR'" mat-raised-button color="primary">
+                    Finalitzar valoració formació
+                </button>
+            </div>
+         </div>
+        <div class="ml-2 mt-2"><strong>Cursos</strong></div>
+        <table class="ml-2" mat-table [dataSource]="cpresultat[0].cursos">
+            <ng-container matColumnDef="descripcio">
+                <th mat-header-cell *matHeaderCellDef>Descripcio</th>
+                <td  mat-cell *matCellDef="let cur">
+                    {{ cur.descripcio }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="data">
+                <th mat-header-cell *matHeaderCellDef>Data</th>
+                <td  mat-cell *matCellDef="let cur">
+                    {{ cur.data }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="hores">
+                <th mat-header-cell *matHeaderCellDef>Hores</th>
+                <td  mat-cell *matCellDef="let cur">
+                    {{ cur.hores }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="punts">
+                <th mat-header-cell *matHeaderCellDef>Punts</th>
+                <td  mat-cell *matCellDef="let cur">
+                    {{ cur.punts }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="seleccio">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td  mat-cell *matCellDef="let cur">
+                    <mat-slide-toggle (change)="tractarPunts($event, cur)"  [disabled]="accio==='select' || participacio?.estat!=='FR'"  [checked]="cur.swseleccionat==='S'"></mat-slide-toggle>                    
+                </td>
+            </ng-container>            
+            <tr mat-header-row *matHeaderRowDef="cursosdisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: cursosdisplayedColumns"></tr>
+        </table>
+        <div class="ml-2 mt-2"><strong>Cursos aportats amb anterioritat</strong></div>
+        <table class="ml-2" mat-table [dataSource]="cpresultat[0].cursosant">
+            <ng-container matColumnDef="descripcio">
+                <th mat-header-cell *matHeaderCellDef>Descripcio</th>
+                <td [bgColor]="'#CCCCCC'" mat-cell *matCellDef="let cur">
+                    {{ cur.descripcio }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="data">
+                <th mat-header-cell *matHeaderCellDef>Data</th>
+                <td  [bgColor]="'#CCCCCC'" mat-cell *matCellDef="let cur">
+                    {{ cur.data }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="hores">
+                <th mat-header-cell *matHeaderCellDef>Hores</th>
+                <td [bgColor]="'#CCCCCC'" mat-cell *matCellDef="let cur">
+                    {{ cur.hores }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="punts">
+                <th mat-header-cell *matHeaderCellDef>Punts</th>
+                <td [bgColor]="'#CCCCCC'" mat-cell *matCellDef="let cur">
+                    {{ cur.punts }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="conv">
+                <th mat-header-cell *matHeaderCellDef>Convocatoria</th>
+                <td [bgColor]="'#CCCCCC'" mat-cell *matCellDef="let cur">
+                    {{ cur.strconv }}
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="cursosantdisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: cursosantdisplayedColumns"></tr>
+        </table>    
+        <div class="ml-2 mt-2"><strong>Titols</strong></div>
+        <table class="ml-2" mat-table [dataSource]="cpresultat[0].titols">
+            <ng-container matColumnDef="descripcio">
+                <th mat-header-cell *matHeaderCellDef>Descripcio</th>
+                <td  mat-cell *matCellDef="let cur">
+                    {{ cur.titol.descripcio }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="punts">
+                <th mat-header-cell *matHeaderCellDef>Punts</th>
+                <td  mat-cell *matCellDef="let cur">
+                    {{ cur.punts }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="seleccio">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td  mat-cell *matCellDef="let cur">
+                    <mat-slide-toggle (change)="tractarPuntsTitols($event, cur)"  [disabled]="accio==='select' || participacio?.estat!=='FR'"  [checked]="cur.swseleccionat==='S'"></mat-slide-toggle>                    
+                </td>
+            </ng-container>            
+            <tr mat-header-row *matHeaderRowDef="titolsdisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: titolsdisplayedColumns"></tr>
+        </table>
+        <div class="ml-2 mt-2"><strong>Titols presentats amb anterioritat</strong></div>
+        <table class="ml-2" mat-table [dataSource]="cpresultat[0].titolsant">
+            <ng-container matColumnDef="descripcio">
+                <th mat-header-cell *matHeaderCellDef>Descripcio</th>
+                <td  [bgColor]="'#CCCCCC'" mat-cell *matCellDef="let cur">
+                    {{ cur.titol.descripcio }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="punts">
+                <th mat-header-cell *matHeaderCellDef>Punts</th>
+                <td  [bgColor]="'#CCCCCC'" mat-cell *matCellDef="let cur">
+                    {{ cur.punts }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="conv">
+                <th mat-header-cell *matHeaderCellDef>Convocatoria</th>
+                <td  [bgColor]="'#CCCCCC'" mat-cell *matCellDef="let cur">
+                    {{ cur.strconv }}
+                </td>
+            </ng-container>            
+            <tr mat-header-row *matHeaderRowDef="titolsantdisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: titolsantdisplayedColumns"></tr>
+        </table>    
+    </div>
+    <div *ngIf="mode===3" fxLayot="column">
+        <div fxLayout="row" fxLayoutAlign="start center">
+             <mat-card class="container mat-elevation-z24" fxFlex.gt-md="200px" fxLayout="column">
+                <div><strong>Valoració Competències: </strong>{{resultatavaluacio?.competencies}}</div>
+            </mat-card>
+            <div>
+                <button (click)="tancarValoracioCompetencies()"  *ngIf="accio==='update' && participacio?.estat==='36'" mat-raised-button color="primary">
+                    Finalitzar valoració competències
+                </button>
+            </div>
+         </div>
+        <div class="ml-2 mt-2"><strong>Avaluacions</strong></div>
+        <table class="ml-2" mat-table [dataSource]="avaluacions">
+            <ng-container matColumnDef="origen">
+                <th mat-header-cell *matHeaderCellDef>Origen</th>
+                <td  mat-cell *matCellDef="let ava">
+                    {{ getStrOrigen(ava.origen) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="equip">
+                <th mat-header-cell *matHeaderCellDef>Treball Equip</th>
+                <td  [ngStyle]="{'color': ava.equip<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.equip) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="adaptabilitat">
+                <th mat-header-cell *matHeaderCellDef>Adaptabilitat</th>
+                <td  [ngStyle]="{'color': ava.adaptabilitat<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.adaptabilitat) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="compromis">
+                <th mat-header-cell *matHeaderCellDef>Compromís</th>
+                <td  [ngStyle]="{'color': ava.compromis<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.compromis) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="resultats">
+                <th mat-header-cell *matHeaderCellDef>Resultats</th>
+                <td  [ngStyle]="{'color': ava.resultats<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.resultats) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="ciutadania">
+                <th mat-header-cell *matHeaderCellDef>Ciutadania</th>
+                <td  [ngStyle]="{'color': ava.ciutadania<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.ciutadania) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="dirhabilitats">
+                <th mat-header-cell *matHeaderCellDef>Habilitats directives</th>
+                <td  [ngStyle]="{'color': ava.dirhabilitats<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.dirhabilitats) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="dirform">
+                <th mat-header-cell *matHeaderCellDef>Foment formació</th>
+                <td  [ngStyle]="{'color': ava.dirform<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.dirform) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="dirproced">
+                <th mat-header-cell *matHeaderCellDef>Compliment plaços</th>
+                <td  [ngStyle]="{'color': ava.dirproced<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.dirproced) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="direadmin">
+                <th mat-header-cell *matHeaderCellDef>Foment eadmin</th>
+                <td  [ngStyle]="{'color': ava.direadmin<0 ? 'red' : 'gray'}" mat-cell *matCellDef="let ava">
+                    {{ positiu(ava.direadmin) }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="observacions">
+                <th mat-header-cell *matHeaderCellDef>Observacions</th>
+                <td  mat-cell *matCellDef="let ava">
+                    {{ ava.observacions }}
+                </td>
+            </ng-container>            
+            <ng-container matColumnDef="seleccio">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td  mat-cell *matCellDef="let ava">
+                    <button *ngIf="accio==='update' && ava.origen!=='M'  && participacio?.estat==='36'" mat-button color="warn" (click)="deleteAvaluacio(ava)">
+                        <mat-icon>delete</mat-icon>
+                    </button>                    
+                </td>
+            </ng-container>            
+            <tr mat-header-row *matHeaderRowDef="valoraciodisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: valoraciodisplayedColumns"></tr>
+        </table>
+        <form
+            *ngIf="accio==='update' && participacio?.estat==='36' && formCompetencies"
+            [formGroup]="formCompetencies"
+            (ngSubmit)="saveCompetencies()"
+            autocomplete="off"
+            fxLayout="row"
+        >
+            <mat-card class="mat-elevation-z2" fxLayout="column" fxFlex="700px">
+                <div><strong>Afegir nova avaluació</strong></div>
+                <div fxLayout="row wrap">
+                    <mat-form-field appearance="fill" fxFlex="400px">
+                    <mat-label>Origen</mat-label>
+                    <mat-select
+                    [formControl]="origen"
+                    >
+                        <mat-option value="S">Superior</mat-option>
+                        <mat-option value="C">Col·laborador</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="origen.hasError('required')">
+                        Camp obligatori
+                    </mat-error>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row">
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>Equip</mat-label>
+                            <input matInput type="number" [formControl]="equip" />
+                        </mat-form-field>
+                    </div>                
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>Adaptabilitat</mat-label>
+                            <input matInput type="number" [formControl]="adaptabilitat" />
+                        </mat-form-field>
+                    </div>                
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>Compromís</mat-label>
+                            <input matInput type="number" [formControl]="compromis" />
+                        </mat-form-field>
+                    </div>                
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>Resultats</mat-label>
+                            <input matInput type="number" [formControl]="resultats" />
+                        </mat-form-field>
+                    </div>                
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>Ciutadania</mat-label>
+                            <input matInput type="number" [formControl]="ciutadania" />
+                        </mat-form-field>
+                    </div>                
+                </div>
+                <div fxLayout="row" *ngIf="participacio?.questionari==='1'">
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>Habilitats</mat-label>
+                            <input matInput type="number" [formControl]="dirhabilitats" />
+                        </mat-form-field>
+                    </div>                
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>Formació</mat-label>
+                            <input matInput type="number" [formControl]="dirform" />
+                        </mat-form-field>
+                    </div>                
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>Procediments</mat-label>
+                            <input matInput type="number" [formControl]="dirproced" />
+                        </mat-form-field>
+                    </div>                
+                    <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="100px">
+                            <mat-label>eadmin</mat-label>
+                            <input matInput type="number" [formControl]="direadmin" />
+                        </mat-form-field>
+                    </div>                
+                </div>
+                <div fxLayout="row wrap">
+                        <mat-form-field appearance="fill" fxFlex="650px">
+                            <mat-label>Observacions</mat-label>
+                            <input matInput type="text" [formControl]="observacions" />
+                        </mat-form-field>
+                        <button
+                            class="boto-afegir"
+                            mat-button
+                            color="primary"
+                            type="submit"
+                        > Afegir Avaluació
+                        <mat-icon>add_circle</mat-icon>
+                        </button>                        
+                </div>                
+            </mat-card>
+        </form>
+    </div>    
+</div>
+<div *ngIf="reading" fxLayout="column wrap">
+    <div>Carregant informació empleat {{participacio?.personal?.codiempl}} a convocatoria {{ convocatoria?.descripcio}}</div>
+    <div fxLayout="row" class="mt-plus">
+        <mat-progress-bar fxFlex.gt-md="600px" mode="indeterminate"></mat-progress-bar>
+    </div>    
+</div>

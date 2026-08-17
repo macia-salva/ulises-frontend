@@ -1,0 +1,58 @@
+<h2>Carrera Professional / Convocatòries</h2>
+<div>
+    <p id="convocatoriesFeedback" class="hide msgFeedback"></p>
+</div>
+    <button
+        class="boto-afegir"
+        mat-button
+        color="primary"
+        (click)="insert()"
+      > Afegir Convocatoria
+        <mat-icon>add_circle</mat-icon>
+      </button>
+<div class="searchResult">
+    <div>
+        <table mat-table [dataSource]="llistaConvocatories">
+            <ng-container matColumnDef="descripcio">
+                <th mat-header-cell *matHeaderCellDef>Descripció</th>
+                <td mat-cell *matCellDef="let conv">
+                    {{ conv.descripcio }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="datarec">
+                <th mat-header-cell *matHeaderCellDef>Data Reconeixement</th>
+                <td mat-cell *matCellDef="let conv">
+                    {{ conv.dataReconeixement }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="tipus">
+                <th mat-header-cell *matHeaderCellDef>Tipus</th>
+                <td mat-cell *matCellDef="let conv">
+                    {{ conv.tipusStr }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="estat">
+                <th mat-header-cell *matHeaderCellDef>Estat</th>
+                <td mat-cell *matCellDef="let conv">
+                    {{ conv.estatStr }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="oper">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td class="action_cell" mat-cell *matCellDef="let conv">
+                    <button mat-button (click)="select(conv)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-button color="accent" *ngIf="conv.estat!=='FI' && conv.estat!=='EI'" (click)="update(conv)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-button  *ngIf="conv.estat!=='FI' && conv.estat!=='EI'" (click)="stop(conv)">
+                        <mat-icon>stop</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="convDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: convDisplayedColumns"></tr>
+        </table>
+    </div>
+</div>

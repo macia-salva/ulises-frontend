@@ -1,0 +1,207 @@
+<div class="margin_body">
+  <a class="mb-2" (click)="tornar()"><-- Tornar a històric serveis prestats</a>
+  <h1>Històric Plaça</h1>
+  <div class="margin-left">
+    <div fxLayout="row wrap" fxLayoutAlign="start top">
+      <mat-card class="mat-elevation-z24">
+        <div fxLayout="row">Codi: {{ personal.id.codiempl }}</div>
+        <div fxLayout="row">
+          Document: {{ personal.ndniempl }}{{ personal.ddniempl }}
+        </div>
+        <div fxLayout="row">
+          Nom: {{ personal.nombre }} {{ personal.apellid1 }}
+          {{ personal.apellid2 }}
+        </div>
+      </mat-card>
+      <mat-card *ngIf="relplazpers"  class="mat-elevation-z24">
+        <div fxLayout="row">Naturaleza: {{ relplazpers.naturalezaPzaDes }}</div>
+        <div fxLayout="row">Plaza: {{ relplazpers.descripcionPza }}</div>
+      </mat-card>
+    </div>
+  </div>
+  <form
+    *ngIf="ocPlazaForm"
+    [formGroup]="ocPlazaForm"
+    (ngSubmit)="saveOcupacioPlaz()"
+    autocomplete="off"
+  >
+    <mat-card class="mat-elevation-z2" fxLayout="column">
+      <div class="lloc" fxLayout="column">
+        <div fxLayout="row wrap">
+          <mat-form-field appearance="fill" fxFlex="300px">
+            <mat-label>Des de</mat-label>
+            <input matInput type="date" [formControl]="desde" />
+            <mat-error *ngIf="desde.hasError('required')">
+              La data de inici de la ocupació es obligatoria
+            </mat-error>
+            <div
+              class="mat-error mat-form-field-subscript-wrapper mt-2"
+              *ngIf="ocPlazaForm.errors?.['datesError']"
+            >
+              La data fi no pot ser menor que la d'inici
+            </div>
+          </mat-form-field>
+          <mat-form-field appearance="fill" fxFlex="300px">
+            <mat-label>Fins</mat-label>
+            <input matInput type="date" [formControl]="fins" />
+            <mat-error *ngIf="fins.hasError('required')">
+              La data de fi de la ocupació es obligatoria
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div *ngIf="accio === 'insert'" fxLayout="row wrap">
+        <mat-form-field appearance="fill" fxFlex="400px">
+        <mat-label>Empresa</mat-label>
+        <mat-select
+          [formControl]="entitat"
+        >
+          <mat-option
+            *ngFor="let entitat of entitatsLlista"
+            [value]="entitat.codienti"
+          >
+            {{ entitat.nombenti }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="desde.hasError('required')">
+          Camp obligatori
+        </mat-error>
+      </mat-form-field>
+      </div>
+      <div *ngIf="accio === 'insert'" fxLayout="row wrap">
+        <mat-form-field appearance="fill" fxFlex="400px">
+          <mat-label>Naturalesa de la plaça</mat-label>
+          <mat-select [formControl]="natPlaza">
+            <mat-option
+              *ngFor="let nat of natPlaLlista"
+              [value]="nat.codinatu"
+            >
+              {{ nat.descnatu }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="desde.hasError('required')">
+            Camp obligatori
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div *ngIf="accio === 'insert'" fxLayout="row wrap">
+        <mat-form-field appearance="fill" fxFlex="600px">
+        <mat-label>Plaça ocupada</mat-label>
+        <textarea
+          matInput
+          rows="1"
+          [formControl]="tplaza"
+          [matAutocomplete]="autoPlaces"
+        >
+        </textarea>
+        <mat-autocomplete
+          autoActiveFirstOption
+          #autoPlaces="matAutocomplete"
+        >
+          <mat-option
+            *ngFor="let plaz of fPlacesLlista | async"
+            [value]="plaz.desctpla"
+          >
+            {{ plaz.desctpla }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="desde.hasError('required')">
+          Camp obligatori
+        </mat-error>
+      </mat-form-field>
+      </div>
+      <div fxLayout="row wrap">
+        <mat-form-field appearance="fill" fxFlex="400px">
+          <mat-label>Situació</mat-label>
+          <mat-select [formControl]="situPlaza">
+            <mat-option
+              *ngFor="let situ of situPlaLlista"
+              [value]="situ.codisitu"
+            >
+              {{ situ.descsitu }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="desde.hasError('required')">
+            Camp obligatori
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row wrap">
+        <mat-form-field appearance="fill" fxFlex="400px">
+          <mat-label>Adscripció</mat-label>
+          <mat-select [formControl]="adscPlaza">
+            <mat-option
+              *ngFor="let adsc of tpAdsLLista"
+              [value]="adsc.codifoad"
+            >
+              {{ adsc.descfoad }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="desde.hasError('required')">
+            Camp obligatori
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row wrap">
+        <mat-form-field appearance="fill" fxFlex="400px">
+          <mat-label>Naturalesa Relació</mat-label>
+          <mat-select [formControl]="natRela">
+            <mat-option
+              *ngFor="let rela of natRelLlista"
+              [value]="rela.codirela"
+            >
+              {{ rela.descrela }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="desde.hasError('required')">
+            Camp obligatori
+          </mat-error>
+        </mat-form-field>
+      </div>      
+      <div fxLayout="row wrap">
+        <mat-form-field appearance="fill" fxFlex="400px">
+          <mat-label>Situació Administrativa</mat-label>
+          <mat-select [formControl]="situAdmin">
+            <mat-option></mat-option>
+            <mat-option
+              *ngFor="let situ of situAdminLlista"
+              [value]="situ.codisiad"
+            >
+              {{ situ.descsiad }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!--div fxLayout="row wrap">
+        <mat-form-field appearance="fill">
+          <mat-label>Data final titularitat</mat-label>
+          <input matInput type="date" [formControl]="finsTitular" />
+        </mat-form-field>
+      </div-->
+      <div fxLayout="row wrap">
+        <mat-form-field appearance="fill" fxFlex="100px">
+          <mat-label>% Jornada</mat-label>
+          <input matInput type="number" [formControl]="jornada" />
+          <mat-error *ngIf="desde.hasError('required')">
+            Camp obligatori
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <p id="ocupacioPlazaFeedback" class="hide msgFeedback"></p>
+      </div>
+      <div fxLayout="row" class="mt-plus">
+        <button fxFlex="200px" mat-raised-button color="primary" type="submit">
+          {{ titulo }}
+        </button>
+      </div>
+      <div fxLayout="row" class="mt-plus">
+        <mat-progress-bar
+          fxFlex="200px"
+          *ngIf="updating"
+          mode="indeterminate"
+        ></mat-progress-bar>
+      </div>
+    </mat-card>
+  </form>
+</div>

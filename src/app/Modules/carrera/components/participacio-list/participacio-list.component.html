@@ -1,0 +1,91 @@
+<h2>Carrera Professional / Participants convocatoria</h2>
+<div>
+    <p id="Feedback" class="hide msgFeedback"></p>
+</div>
+<div fxLayout="column wrap">
+    <div>
+        <a class="mb-2" (click)="tornar()"><-- Tornar a llistat convocatòries</a>
+    </div>
+    <div fxLayout="row wrap">
+        <mat-card class="mat-elevation-z24" fxFlex.gt-md="600px">
+            <p>Convocatoria: {{ convocatoria?.descripcio}}</p>
+            <p>Data Reconeixement: {{ convocatoria?.dataReconeixement}}</p>
+    <button
+        class="boto-afegir"
+        mat-button
+        color="primary"
+        (click)="insert()"
+      > Afegir Participació
+        <mat-icon>add_circle</mat-icon>
+      </button>
+
+        </mat-card>
+    </div>
+    <div fxLayout="row" class="mt-plus">
+        <mat-progress-bar fxFlex.gt-md="600px" *ngIf="updating" mode="indeterminate"></mat-progress-bar>
+    </div>
+    <div>
+        <table mat-table [dataSource]="llistaParticipacions">
+            <ng-container matColumnDef="codi">
+                <th mat-header-cell *matHeaderCellDef>Codi</th>
+                <td mat-cell *matCellDef="let part">
+                    {{ part.codiempl }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="nom">
+                <th mat-header-cell *matHeaderCellDef>Nom</th>
+                <td mat-cell *matCellDef="let part">
+                    {{ part.personal.nomcomplet }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="datareg">
+                <th mat-header-cell *matHeaderCellDef>Registre</th>
+                <td mat-cell *matCellDef="let part">
+                    {{ part.dataRegistre }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="nivell">
+                <th mat-header-cell *matHeaderCellDef>Nivell</th>
+                <td mat-cell *matCellDef="let part">
+                    {{ part.nivellobtingut?.grup }} {{ part.nivellobtingut?.nivell }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="estat">
+                <th mat-header-cell *matHeaderCellDef>Estat</th>
+                <td mat-cell *matCellDef="let part">
+                    {{ part.estatstr }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="resultat">
+                <th mat-header-cell *matHeaderCellDef>Resultat</th>
+                <td mat-cell *matCellDef="let part">
+                    {{ part.swadmesstr }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="motiu">
+                <th mat-header-cell *matHeaderCellDef>Motiu Exclusió</th>
+                <td mat-cell *matCellDef="let part">
+                    {{ part.motiuexclusio }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="oper">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td class="action_cell" mat-cell *matCellDef="let part">
+                    <div fxLayout="row">
+                    <button class="padding1" mat-button (click)="select(part)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button class="padding1" *ngIf="accio==='update' && part.estat!='FI'" mat-button color="accent" (click)="update(part)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="padding1" *ngIf="accio==='update'" mat-button color="warn" (click)="deleteParticipacio(part)">
+                        <mat-icon>delete</mat-icon>
+                    </button>                    
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </div>
+</div>

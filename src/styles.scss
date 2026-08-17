@@ -1,0 +1,74 @@
+/* You can add global styles to this file, and also import other style files */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  @page {
+//    size: 5in 13in; /* auto is the initial value */
+//    margin: 0mm; /* this affects the margin in the printer settings */
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.msgFeedback {
+  min-width: 250px;
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  padding: 16px;
+  z-index: 1;
+  font-size: 14px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alert {
+  background-color: green;
+}
+
+.requestKo {
+  background-color: red;
+}
+
+.hide {
+  display: none;
+}
+
+.requestKo {
+  background-color: red;
+}
+
+.show {
+  display: block;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+.mt-plus {
+  margin-top: 1.2em;
+}
+
+.mt-2 {
+  margin-top: 2em;
+}
+
+.mr-2 {
+  margin-right: 2em;
+}
+
+.ml-2 {
+  margin-left: 2em;
+}
+
+.mb-2 {
+  margin-bottom: 2em;
+}
