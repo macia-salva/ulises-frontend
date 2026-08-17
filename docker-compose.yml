@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  ulises-front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ulises-front-dev
+    ports:
+      - "4200:4200"
+    volumes:
+      # Sincroniza tu código local con el contenedor para hot-reload
+      - .:/app
+      # Protege los node_modules del contenedor para que no se sobreescriban
+      - /app/node_modules
+    command: ng serve --host 0.0.0.0 --poll 2000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
