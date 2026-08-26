@@ -19,15 +19,31 @@
         </div>
         <div>
           <button
-          class="boto-afegir"
-          mat-button
-          color="primary"      
-          (click)="imprimir()"
-          
-        >
-        <mat-icon>printer</mat-icon>
-                  Serv. Prestats
-        </button>
+            class="boto-afegir"
+            mat-button
+            color="primary"      
+            (click)="imprimir(false)"
+          >
+           <mat-icon style="vertical-align: middle;">printer</mat-icon>
+            <span style="display: inline-flex; flex-direction: column; text-align: left; line-height: 1.1; vertical-align: middle; margin-left: 4px;">
+              <span>Serv. Prestats</span>
+              <span style="font-size: 0.85em;">PDF</span>
+            </span>
+          </button>
+        </div>
+        <div>
+          <button
+            class="boto-afegir"
+            mat-button
+            color="primary"      
+          (click)="imprimir(true)"
+          >
+            <mat-icon style="vertical-align: middle;">printer</mat-icon>
+            <span style="display: inline-flex; flex-direction: column; text-align: left; line-height: 1.1; vertical-align: middle; margin-left: 4px;">
+              <span>Serv. Prestats</span>
+              <span style="font-size: 0.85em;">.docx</span>
+            </span>
+          </button>
         </div>
         <div>
           <button

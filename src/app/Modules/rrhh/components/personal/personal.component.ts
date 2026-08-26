@@ -97,23 +97,23 @@ export class PersonalComponent implements OnInit {
   ) {
     this.personal = menuPersonalService.getPersonal();
     this.dlimit = new FormControl();
-    this.isSearchingPlaces =false;
-    this.isSearchingLlocs =false;
-    this.isSearchingSrvPrest =false;
+    this.isSearchingPlaces = false;
+    this.isSearchingLlocs = false;
+    this.isSearchingSrvPrest = false;
     this.llistaLlocs = [];
     this.llistaPlaces = [];
     this.llistaSrvprest = [];
     this.loadLlistes();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   private loadLlistes() {
-   this.loadLlocs();
+    this.loadLlocs();
   }
 
   private loadLlocs() {
-    this.isSearchingLlocs=true;
+    this.isSearchingLlocs = true;
     this.rptService
       .relacioLlocsEmpl(
         this.personal.id.codienti.toString(),
@@ -123,7 +123,7 @@ export class PersonalComponent implements OnInit {
         (llocs: RelPuePersDTO[]) => {
           this.llistaLlocs = llocs;
           this.isSearchingLlocs = false;
-          this.loadPlaces();       
+          this.loadPlaces();
         },
         (error: HttpErrorResponse) =>
           this.messageService.showHttpResponseError('rrhhFeedback', error)
@@ -133,19 +133,19 @@ export class PersonalComponent implements OnInit {
   private loadPlaces() {
     this.isSearchingPlaces = true;
     this.plantillaService
-    .relacioPlacesEmpl(
-      this.personal.id.codienti.toString(),
-      this.personal.id.codiempl.toString()
-    )
-    .subscribe(
-      (places: RelPlazPersDTO[]) => {
-        this.llistaPlaces = places;
-        this.isSearchingPlaces = false;
-        this.loadSevPrest();
-      },
-      (error: HttpErrorResponse) =>
-        this.messageService.showHttpResponseError('rrhhFeedback', error)
-    );
+      .relacioPlacesEmpl(
+        this.personal.id.codienti.toString(),
+        this.personal.id.codiempl.toString()
+      )
+      .subscribe(
+        (places: RelPlazPersDTO[]) => {
+          this.llistaPlaces = places;
+          this.isSearchingPlaces = false;
+          this.loadSevPrest();
+        },
+        (error: HttpErrorResponse) =>
+          this.messageService.showHttpResponseError('rrhhFeedback', error)
+      );
   }
 
   private loadSevPrest() {
@@ -155,11 +155,11 @@ export class PersonalComponent implements OnInit {
       .subscribe(
         (sp: SrvprevDTO[]) => {
           this.llistaSrvprest = sp;
-          this.isSearchingSrvPrest =false;
+          this.isSearchingSrvPrest = false;
         },
         (error: HttpErrorResponse) =>
           this.messageService.showHttpResponseError('rrhhFeedback', error)
-      );    
+      );
   }
 
   public getJornada(pue: RelPuePersDTO): string {
@@ -196,7 +196,7 @@ export class PersonalComponent implements OnInit {
     this.menuPersonalService.setYfasepuesv(lloc);
     if (lloc.activoHoy !== 'S')
       this.router.navigateByUrl('rrhh/ocupaciolloc/update');
-    else 
+    else
       this.router.navigateByUrl('rrhh/ocupaciolloc/update_current');
   }
 
@@ -221,52 +221,66 @@ export class PersonalComponent implements OnInit {
     }
   }
 
-/*
-  public imprimir(): void { 
-//    let fdate:string = formatDate(Date.now(),'yyyyMMdd','es-ES');
-    window.open('http://ulises.calvia.net/RestApi/servlet/ReportProxy?report=/reports/ginpix/puestos/ServPrestats.jasper&DATASOURCE=GINPIX&CODIENTI='+this.personal.id.codienti+'&CODIEMPL='+this.personal.id.codiempl,'_blank');
-  }
-*/
-  public imprimir(): void {
-//    let fdate:string = formatDate(Date.now(),'yyyyMMdd','es-ES');
-    if (this.dlimit.value==='') alert("La data límit es obligatoria");
-    else {
-      window.open('http://ulises.calvia.net/RestApi/servlet/ReportProxy?report=/reports/ginpix/puestos/ServPrestats.jasper&DATASOURCE=GINPIX&CODIENTI='+this.personal.id.codienti+'&CODIEMPL='+this.personal.id.codiempl+'&DLIMIT='+this.dlimit.value,'_blank');
+  /*
+    public imprimir(): void { 
+  //    let fdate:string = formatDate(Date.now(),'yyyyMMdd','es-ES');
+      window.open('http://ulises.calvia.net/RestApi/servlet/ReportProxy?report=/reports/ginpix/puestos/ServPrestats.jasper&DATASOURCE=GINPIX&CODIENTI='+this.personal.id.codienti+'&CODIEMPL='+this.personal.id.codiempl,'_blank');
+    }
+  */
+
+  public imprimir(esDocx: boolean = false): void {
+    // let fdate:string = formatDate(Date.now(),'yyyyMMdd','es-ES');
+    if (this.dlimit.value === '') {
+      alert("La data límit es obligatoria");
+    } else {
+     // Si es docx añade &EXPORT=DOC, si no (PDF), no añade nada
+      const exportParam = esDocx ? '&EXPORT=DOC' : '';
+
+      window.open(
+        'http://ulises.calvia.net/RestApi/servlet/ReportProxy?report=/reports/ginpix/puestos/ServPrestats.jasper&DATASOURCE=GINPIX&CODIENTI=' +
+        this.personal.id.codienti +
+        '&CODIEMPL=' +
+        this.personal.id.codiempl +
+        '&DLIMIT=' +
+        this.dlimit.value +
+        exportParam,
+        '_blank'
+      );
     }
   }
 
 
-  public imprimir_qualif(): void { 
+  public imprimir_qualif(): void {
     //    let fdate:string = formatDate(Date.now(),'yyyyMMdd','es-ES');
-        window.open('http://ulises.calvia.net/RestApi/servlet/ReportProxy?report=/reports/ginpix/puestos/QualifProf.jasper&TYPE=odt&DATASOURCE=GINPIX&CODIENTI='+this.personal.id.codienti+'&CODIEMPL='+this.personal.id.codiempl,'_blank');
-      }
+    window.open('http://ulises.calvia.net/RestApi/servlet/ReportProxy?report=/reports/ginpix/puestos/QualifProf.jasper&TYPE=odt&DATASOURCE=GINPIX&CODIENTI=' + this.personal.id.codienti + '&CODIEMPL=' + this.personal.id.codiempl, '_blank');
+  }
 
-  public obtenirDataInici(rpp:RelPuePersDTO):Date {
+  public obtenirDataInici(rpp: RelPuePersDTO): Date {
     let dataInici: Date;
     let dataFiDot: Date | null;
-    if (rpp.finVersionDot==null) dataFiDot=new Date();
-    else dataFiDot=this.getDate(rpp.finVersionDot);
-    if (this.getDate(rpp.inicioVersionDot)<=this.getDate(rpp.inicioVersionFas) && (dataFiDot>=this.getDate(rpp.inicioVersionFas))) dataInici=rpp.inicioVersionFas;
-    else dataInici=rpp.inicioVersionDot;
+    if (rpp.finVersionDot == null) dataFiDot = new Date();
+    else dataFiDot = this.getDate(rpp.finVersionDot);
+    if (this.getDate(rpp.inicioVersionDot) <= this.getDate(rpp.inicioVersionFas) && (dataFiDot >= this.getDate(rpp.inicioVersionFas))) dataInici = rpp.inicioVersionFas;
+    else dataInici = rpp.inicioVersionDot;
     return dataInici;
   }
 
-public obtenirDataFi(rpp:RelPuePersDTO):Date {
+  public obtenirDataFi(rpp: RelPuePersDTO): Date {
     let dataFi: Date | null;
     let dataFiDot: Date | null;
-    if (rpp.finVersionDot==null) dataFiDot=new Date();
-    else dataFiDot=this.getDate(rpp.finVersionDot);
+    if (rpp.finVersionDot == null) dataFiDot = new Date();
+    else dataFiDot = this.getDate(rpp.finVersionDot);
     let dataFiFase: Date | null;
-    if (rpp.finVersionFas==null) dataFiFase=new Date();
-    else dataFiFase=this.getDate(rpp.finVersionFas);
-    if (this.getDate(rpp.inicioVersionDot)<=dataFiFase && dataFiDot>=dataFiFase) dataFi=rpp.finVersionFas;
-    else dataFi=rpp.finVersionDot;
+    if (rpp.finVersionFas == null) dataFiFase = new Date();
+    else dataFiFase = this.getDate(rpp.finVersionFas);
+    if (this.getDate(rpp.inicioVersionDot) <= dataFiFase && dataFiDot >= dataFiFase) dataFi = rpp.finVersionFas;
+    else dataFi = rpp.finVersionDot;
     return dataFi;
-  } 
-  
+  }
+
   private getDate(data: Date): Date {
     let [day, month, year] = data.toString().split('/');
-    return new Date(+year, +month -1, +day);
+    return new Date(+year, +month - 1, +day);
   }
 
 

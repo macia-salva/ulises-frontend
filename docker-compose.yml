@@ -13,7 +13,8 @@ services:
       - .:/app
       # Protege los node_modules del contenedor para que no se sobreescriban
       - /app/node_modules
-    command: ng serve --host 0.0.0.0 --poll 2000
+    # command: ng serve --host 0.0.0.0 --poll 2000
+    command: tail -f /dev/null
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
