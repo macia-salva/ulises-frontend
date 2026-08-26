@@ -8,24 +8,25 @@ When running the application locally, you need to configure the Angular API prox
 
 * Backend running in Docker (Local Dev):
   Use host.docker.internal so the Angular dev server can communicate with the containerized backend:
-
+```
   {
     "/RestApi/rest": {
       "target": "http://host.docker.internal:8080/",
       "secure": false
     }
   }
+```
 
 * Backend running directly on host machine / Production target:
   Use localhost when running the backend server natively outside Docker:
-
+```
   {
     "/RestApi/rest": {
       "target": "http://localhost:8080/",
       "secure": false
     }
   }
-
+```
 
 ## Production Deployment (Apache Tomcat)
 
@@ -47,8 +48,7 @@ ng build --configuration production --base-href /rrhh/
 cd dist/<app-name>
 
 # 3. Compress the contents and rename to WAR format
-Compress-Archive -Path * -DestinationPath rrhh.zip
-Rename-Item -Path rrhh.zip -NewName rrhh.war
+Compress-Archive -Path * -DestinationPath rrhh.zip Rename-Item -Path rrhh.zip -NewName rrhh.war
 
 # 4. SCP to server.
 scp rrhh.war administrador@172.19.10.49:/opt/apache-tomcat-10.0.17-RRHH/webapps/
