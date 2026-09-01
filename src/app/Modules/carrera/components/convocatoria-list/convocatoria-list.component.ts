@@ -45,6 +45,20 @@ export class ConvocatoriaListComponent implements OnInit {
     );
   }
 
+  borrar(conv: CpConvocatoriaDTO): void {
+    if (confirm('¿Seguro que deseas eliminar esta convocatoria?')) {
+      this.carreraService.deleteConvocatoria(conv.kconvocatoria).subscribe({
+        next: () => {
+          // recargamos la lista otra vez
+          this.obtenirConvocatories();
+        },
+        error: (err) => {
+          console.error('Error al borrar la convocatoria', err);
+        }
+      });
+    }
+  }
+
   stop(conv: CpConvocatoriaDTO): void {
     let confi=confirm("Està segur de voler tancar la convocatòria?");
     if (confi) {

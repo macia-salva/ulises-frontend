@@ -26,7 +26,12 @@ export class CarreraService {
       this.urlApi + '/findConvocatories'
     );
   }
-
+  
+  deleteConvocatoria(kconv: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.urlApi}/eliminarConvocatoria/${kconv}`
+    );
+  }
 
   findPartipacions(kconv: number): Observable<CpParticipacioDTO[]> {
     return this.http.get<CpParticipacioDTO[]>(

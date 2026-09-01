@@ -2,14 +2,9 @@
 <div>
     <p id="convocatoriesFeedback" class="hide msgFeedback"></p>
 </div>
-    <button
-        class="boto-afegir"
-        mat-button
-        color="primary"
-        (click)="insert()"
-      > Afegir Convocatoria
-        <mat-icon>add_circle</mat-icon>
-      </button>
+<button class="boto-afegir" mat-button color="primary" (click)="insert()"> Afegir Convocatoria
+    <mat-icon>add_circle</mat-icon>
+</button>
 <div class="searchResult">
     <div>
         <table mat-table [dataSource]="llistaConvocatories">
@@ -43,11 +38,20 @@
                     <button mat-button (click)="select(conv)">
                         <mat-icon>visibility</mat-icon>
                     </button>
-                    <button mat-button color="accent" *ngIf="conv.estat!=='FI' && conv.estat!=='EI'" (click)="update(conv)">
+                    <button mat-icon-button color="accent"
+                        [style.visibility]="(conv.estat !== 'FI' && conv.estat !== 'EI') ? 'visible' : 'hidden'"
+                        (click)="update(conv)">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-button  *ngIf="conv.estat!=='FI' && conv.estat!=='EI'" (click)="stop(conv)">
+
+                    <button mat-icon-button
+                        [style.visibility]="(conv.estat !== 'FI' && conv.estat !== 'EI') ? 'visible' : 'hidden'"
+                        (click)="stop(conv)">
                         <mat-icon>stop</mat-icon>
+                    </button>
+
+                    <button mat-icon-button class="btn-delete" (click)="borrar(conv)">
+                        <mat-icon>delete</mat-icon>
                     </button>
                 </td>
             </ng-container>
