@@ -1,28 +1,56 @@
-# SancionsPoliciaFront
+# Ulises Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.6.
+## Local Development (Docker & Proxy Configuration)
 
-## Development server
+When running the application locally, you need to configure the Angular API proxy (proxy.conf.json) depending on whether your backend is running directly on localhost or inside a Docker container.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Proxy Configuration (proxy.conf.json)
 
-## Code scaffolding
+* Backend running in Docker (Local Dev):
+  Use host.docker.internal so the Angular dev server can communicate with the containerized backend:
+```
+  {
+    "/RestApi/rest": {
+      "target": "http://host.docker.internal:8080/",
+      "secure": false
+    }
+  }
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+* Backend running directly on host machine / Production target:
+  Use localhost when running the backend server natively outside Docker:
+```
+  {
+    "/RestApi/rest": {
+      "target": "http://localhost:8080/",
+      "secure": false
+    }
+  }
+```
 
-## Build
+## Production Deployment (Apache Tomcat)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Follow these steps to build the application, package it into a WAR file, and deploy it to a Tomcat server under the `/rrhh/` context path.
 
-## Running unit tests
+### 1. Prerequisites
+- Node.js and Angular CLI installed (or run this commands inside docker container).
+- PowerShell (for compression commands on Windows).
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 2. Build and Package (.war)
 
-## Running end-to-end tests
+Open a terminal at the root of the project and run the following commands:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```powershell
+# 1. Build the app for production with the base href set
+ng build --configuration production --base-href /rrhh/
 
-## Further help
+# 2. Navigate to the output directory
+cd dist/<app-name>
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-# ulises-frontend
+# 3. Compress the contents and rename to WAR format
+Compress-Archive -Path * -DestinationPath rrhh.zip Rename-Item -Path rrhh.zip -NewName rrhh.war
+
+# 4. SCP to server.
+scp rrhh.war administrador@172.19.10.49:/opt/apache-tomcat-10.0.17-RRHH/webapps/
+```
+
