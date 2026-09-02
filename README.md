@@ -48,7 +48,7 @@ ng build --configuration production --base-href /rrhh/
 cd dist/<app-name>
 
 # 3. Compress the contents and rename to WAR format
-Compress-Archive -Path * -DestinationPath rrhh.zip Rename-Item -Path rrhh.zip -NewName rrhh.war
+Compress-Archive -Path * -DestinationPath rrhh.zip; Rename-Item -Path rrhh.zip -NewName rrhh.war
 
 # 4. SCP to server.
 scp rrhh.war administrador@172.19.10.49:/opt/apache-tomcat-10.0.17-RRHH/webapps/
