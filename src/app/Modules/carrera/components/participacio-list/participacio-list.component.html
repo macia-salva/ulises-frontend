@@ -10,14 +10,9 @@
         <mat-card class="mat-elevation-z24" fxFlex.gt-md="600px">
             <p>Convocatoria: {{ convocatoria?.descripcio}}</p>
             <p>Data Reconeixement: {{ convocatoria?.dataReconeixement}}</p>
-    <button
-        class="boto-afegir"
-        mat-button
-        color="primary"
-        (click)="insert()"
-      > Afegir Participació
-        <mat-icon>add_circle</mat-icon>
-      </button>
+            <button class="boto-afegir" mat-button color="primary" (click)="insert()"> Afegir Participació
+                <mat-icon>add_circle</mat-icon>
+            </button>
 
         </mat-card>
     </div>
@@ -62,6 +57,15 @@
                     {{ part.swadmesstr }}
                 </td>
             </ng-container>
+            <ng-container matColumnDef="canviarResultat">
+                <th mat-header-cell *matHeaderCellDef>Canviar Resultat</th>
+                <td mat-cell *matCellDef="let part">
+                    <button mat-icon-button color="accent" *ngIf="part.swadmesstr === 'EXCLÒS'"
+                        (click)="canviarResultat(part)">
+                        <mat-icon>swap_horiz</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
             <ng-container matColumnDef="motiu">
                 <th mat-header-cell *matHeaderCellDef>Motiu Exclusió</th>
                 <td mat-cell *matCellDef="let part">
@@ -72,15 +76,17 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td class="action_cell" mat-cell *matCellDef="let part">
                     <div fxLayout="row">
-                    <button class="padding1" mat-button (click)="select(part)">
-                        <mat-icon>visibility</mat-icon>
-                    </button>
-                    <button class="padding1" *ngIf="accio==='update' && part.estat!='FI'" mat-button color="accent" (click)="update(part)">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <button class="padding1" *ngIf="accio==='update'" mat-button color="warn" (click)="deleteParticipacio(part)">
-                        <mat-icon>delete</mat-icon>
-                    </button>                    
+                        <button class="padding1" mat-button (click)="select(part)">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button class="padding1" *ngIf="accio==='update' && part.estat!='FI'" mat-button color="accent"
+                            (click)="update(part)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button class="padding1" *ngIf="accio==='update'" mat-button color="warn"
+                            (click)="deleteParticipacio(part)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
                     </div>
                 </td>
             </ng-container>

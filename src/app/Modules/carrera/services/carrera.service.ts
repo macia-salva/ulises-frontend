@@ -20,13 +20,20 @@ export class CarreraService {
   constructor(private http: HttpClient) {
     this.urlApi = apiconfig.apiurl + 'RRHH/Carrera';
   }
-  
+
+  canviarEstatConvocatoria(cp: CpParticipacioDTO): Observable<any> {
+    return this.http.put<any>(
+      `${this.urlApi}/actualitzarEstatConvocatoria`,
+      cp,
+    );
+  }
+
   findConvocatories(): Observable<CpConvocatoriaDTO[]> {
     return this.http.get<CpConvocatoriaDTO[]>(
       this.urlApi + '/findConvocatories'
     );
   }
-  
+
   deleteConvocatoria(kconv: number): Observable<void> {
     return this.http.delete<void>(
       `${this.urlApi}/eliminarConvocatoria/${kconv}`
@@ -35,13 +42,13 @@ export class CarreraService {
 
   findPartipacions(kconv: number): Observable<CpParticipacioDTO[]> {
     return this.http.get<CpParticipacioDTO[]>(
-      this.urlApi + '/obternirParticipantsConvocatoria?kconvocatoria='+kconv
+      this.urlApi + '/obternirParticipantsConvocatoria?kconvocatoria=' + kconv
     );
   }
 
-  afegirParticipacio(kconv: number, codiempl: string, datareg: string, questionari: string, grup:string, nivell:string): Observable<CpParticipacioDTO> {
+  afegirParticipacio(kconv: number, codiempl: string, datareg: string, questionari: string, grup: string, nivell: string): Observable<CpParticipacioDTO> {
     return this.http.get<CpParticipacioDTO>(
-      this.urlApi + '/afegirParticipacio?kconvocatoria='+kconv+'&codiempl='+codiempl+'&questionari='+questionari+'&grup='+grup+'&nivell='+nivell+'&datareg='+datareg
+      this.urlApi + '/afegirParticipacio?kconvocatoria=' + kconv + '&codiempl=' + codiempl + '&questionari=' + questionari + '&grup=' + grup + '&nivell=' + nivell + '&datareg=' + datareg
     );
   }
 
@@ -50,43 +57,43 @@ export class CarreraService {
       this.urlApi + '/afegirConvocatoria',
       conv
     );
-  } 
+  }
 
   tancarConvocatoria(conv: CpConvocatoriaDTO): Observable<CpConvocatoriaDTO> {
     return this.http.put<CpConvocatoriaDTO>(
       this.urlApi + '/tancarConvocatoria',
       conv
     );
-  } 
-  
+  }
 
-  obtenirPartipacio(part : CpParticipacioDTO): Observable<CpResultatParticipacioDTO> {
-    return this.http.get<CpResultatParticipacioDTO>(
-      this.urlApi + '/obtenirDadesParticipacio?kparticipacio='+part.kparticipacio
-    );
-  }  
 
-  refreshPartipacio(part : CpParticipacioDTO): Observable<CpResultatParticipacioDTO> {
+  obtenirPartipacio(part: CpParticipacioDTO): Observable<CpResultatParticipacioDTO> {
     return this.http.get<CpResultatParticipacioDTO>(
-      this.urlApi + '/afegirParticipacio?kconvocatoria='+part.kconvocatoria+'&codiempl='+part.codiempl+'&datareg='+part.dataRegistre
+      this.urlApi + '/obtenirDadesParticipacio?kparticipacio=' + part.kparticipacio
     );
   }
 
-   deleteParticipacio(part: CpParticipacioDTO): Observable<CpParticipacioDTO[]> {
-      return this.http.delete<CpParticipacioDTO[]>(
-        this.urlApi +
-          '/deleteParticipacio/' +
-          part.kparticipacio
-      );
-    }
-  
+  refreshPartipacio(part: CpParticipacioDTO): Observable<CpResultatParticipacioDTO> {
+    return this.http.get<CpResultatParticipacioDTO>(
+      this.urlApi + '/afegirParticipacio?kconvocatoria=' + part.kconvocatoria + '&codiempl=' + part.codiempl + '&datareg=' + part.dataRegistre
+    );
+  }
+
+  deleteParticipacio(part: CpParticipacioDTO): Observable<CpParticipacioDTO[]> {
+    return this.http.delete<CpParticipacioDTO[]>(
+      this.urlApi +
+      '/deleteParticipacio/' +
+      part.kparticipacio
+    );
+  }
+
 
   actualitzarCursAportat(curs: CpCursAportatDTO): Observable<CpCursAportatDTO> {
     return this.http.put<CpCursAportatDTO>(
       this.urlApi + '/actualitzarCursAportat',
       curs
     );
-  }  
+  }
 
 
   actualitzarTitolAportat(curs: CpTitolAportatDTO): Observable<CpTitolAportatDTO> {
@@ -94,35 +101,35 @@ export class CarreraService {
       this.urlApi + '/actualitzarTitolAportat',
       curs
     );
-  } 
+  }
 
   tancarValoracioFormacio(part: CpParticipacioDTO): Observable<CpParticipacioDTO> {
     return this.http.put<CpParticipacioDTO>(
       this.urlApi + '/tancarValoracioFormacio',
       part
     );
-  }  
+  }
 
   tancarValoracioCompetencies(part: CpParticipacioDTO): Observable<CpParticipacioDTO> {
     return this.http.put<CpParticipacioDTO>(
       this.urlApi + '/tancarValoracioCompetencies',
       part
     );
-  }  
+  }
 
   afageirAvaluacio(aval: CpAvaluacioDTO): Observable<CpResultatAvaluacioDTO> {
     return this.http.post<CpResultatAvaluacioDTO>(
       this.urlApi + '/afegirAvaluacio',
       aval
     );
-  }  
+  }
 
   deleteAvaluacio(aval: CpAvaluacioDTO): Observable<CpResultatAvaluacioDTO> {
-     return this.http.delete<CpResultatAvaluacioDTO>(
-        this.urlApi +
-          '/esborrarAvaluacio/' +
-          aval.kavaluacio
-      );
+    return this.http.delete<CpResultatAvaluacioDTO>(
+      this.urlApi +
+      '/esborrarAvaluacio/' +
+      aval.kavaluacio
+    );
   }
 
 
